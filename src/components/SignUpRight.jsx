@@ -29,6 +29,7 @@ const SignUpRight = () => {
                 <div className="flex justify-between">
                     <label>Password</label>
                 </div>
+                
                 <div className="focus:outline-blue-500 flex items-center border-2 rounded-[10px] h-10 gap-2">
                     <FaLock className="size-5 ml-2 mr-1 "/>
                     <input type="password" className="outline-0 w-full rounded-[10px] h-10" placeholder="Minumim 8 characters" />
