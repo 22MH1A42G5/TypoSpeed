@@ -9,6 +9,7 @@ function App() {
   return (
     <div>
       <h1>Typo Speed</h1>
+      <h1>Starting the Web Login</h1>
     </div>
   )
 }
