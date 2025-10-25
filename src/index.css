@@ -3,7 +3,6 @@
 @theme{
   --color-darkblue:#2857c8;
   --color-lightblue:#397df1;
-  --color-lightcolor:white;
   --color-lightorange:#f59e0b;
   --color-primary : #3068da;
   --color-secondary:#f59e0b;
@@ -12,6 +11,9 @@
   --color-lightgrey:#f9fafb;
   --color-contactgrey:#9ca3af;
   --color-lightcolor:#9ca3af;
+  --color-loginsbackground:#E9DFC3;
+  --color-leftblack:#18202f;
+  --color-rightblack:#1f2937;
 }
 
 body{
