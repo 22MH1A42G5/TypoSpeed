@@ -39,9 +39,9 @@ const SignUpRight = () => {
                 Create Account
             </button>
             <div id = "or-div" className="flex items-center justify-center gap-x-2 w-full">
-                <div className="h-[1px] flex-1 md:min-w-[75px] bg-lightcolor"></div>
+                <div className="h-px flex-1 md:min-w-[75px] bg-lightcolor"></div>
                 <p>OR</p>
-                <div className="h-[1px] flex-1 md:min-w-[75px] bg-lightcolor"></div>
+                <div className="h-px flex-1 md:min-w-[75px] bg-lightcolor"></div>
             </div>
             <button className="flex items-center align-middle justify-center bg-white p-1.5 rounded-[10px] gap-x-2 text-black w-full max-w-xs font-bold md:w-80">
                 <FaGoogle />

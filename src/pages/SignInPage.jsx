@@ -4,11 +4,13 @@ import SignInRight from "../components/SignInRight";
 
 const SignInPage = () =>{
     return (
-        <div className= "flex h-screen align-middle items-center justify-center  text-white bg-black">
-            <div className="hidden md:block">
-                <SignInLeft />
+        <div className="bg-white flex align-middle items-center justify-center  text-white h-screen">
+            <div className= "flex align-middle items-center justify-center  text-white ">
+                <div className="hidden md:block">
+                    <SignInLeft />
+                </div>
+                <SignInRight />
             </div>
-            <SignInRight />
         </div>
     )
 }
