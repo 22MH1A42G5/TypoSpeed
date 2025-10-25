@@ -5,13 +5,6 @@
   --color-lightblue:#397df1;
   --color-lightcolor:white;
   --color-lightorange:#f59e0b;
-}
-
-body{
-  /* background-color: black; */
-  height: 100vh;
-  padding: 0;
-
   --color-primary : #3068da;
   --color-secondary:#f59e0b;
   --color-terinary:#22c55e;
@@ -19,4 +12,12 @@ body{
   --color-lightgrey:#f9fafb;
   --color-contactgrey:#9ca3af;
   --color-lightcolor:#9ca3af;
+}
+
+body{
+  /* background-color: black; */
+  height: 100vh;
+  padding: 0;
+
+
 }
