@@ -15,13 +15,13 @@ const HomeBody = () => {
 
   return (
     <>
-    <div className='p-15 bg-primary text-white  line-h flex justify-center items-center flex-wrap gap-20 md:p-30 ' >
+    <div className='p-15 bg-primary text-white  line-h flex justify-center items-center flex-wrap gap-20 md:p-30  ' >
       <div className='max-w-xl'>
         <h1 className=' text-5xl/15 font-bold mb-4'>Master Your Typing Speed with <span className='text-secondary'>Real-Time</span> Analytics </h1>
         <p className='text-[22px] mb-6'>Track your WPM, accuracy, and progress with our advanced typing test platform. Compete with friends and climb the global leaderboard.</p>
         <div className='flex flex-wrap gap-3'>
-            <div className='flex bg-secondary  h-15 w-58 rounded-xl justify-center items-center text-[21px] font-bold'> <FaPlay className='mr-2 text-[15px]' /> Start Typing Test</div>
-            <div className='flex border-2 border-white  h-15 w-45 rounded-xl justify-center items-center text-[21px] font-bold '> <GoGraph className='mr-2' /> View Demo</div>
+            <div className='flex bg-secondary  h-15 w-58 rounded-xl justify-center items-center text-[21px] font-bold hover:bg-amber-400 transition ease-in-out duration-200 cursor-pointer'> <FaPlay className='mr-2 text-[15px]' /> Start Typing Test</div>
+            <div className='flex border-2 border-white  h-15 w-45 rounded-xl justify-center items-center text-[21px] font-bold hover:bg-white hover:text-primary transition ease-in-out duration-200 cursor-pointer'> <GoGraph className='mr-2' /> View Demo</div>
         </div>
       </div>
       <div className=' maxw-xl  bg-[#416ed5] border-[0.1px] border-[#688edf] p-5 rounded-xl flex flex-col gap-5'>
@@ -94,13 +94,13 @@ const HomeBody = () => {
                         <div className='flex flex-col justify-center items-center'><p className='text-secondary font-bold text-3xl' >2</p><p>Errors</p></div>
                         <div className='flex flex-col justify-center items-center'><p className='text-black font-bold text-3xl'>0:45</p><p>Time</p></div>
                     </div>
-                    <div className='flex justify-center items-center gap-3 bg-primary rounded-xl h-10 p-3 text-white'><FaUndoAlt />Reset</div>
+                    <div className='flex justify-center items-center gap-3 bg-primary rounded-xl h-10 p-3 text-white  hover:bg-blue-700 cursor-pointer'><FaUndoAlt />Reset</div>
                 </div>
                 <div className='bg-lightgrey flex align-middle items-center p-8 rounded-xl text-base text-grey tracking-widest' >
                     The quick brown fox jumps over the layz | dog. This pangram sentence contains every letter of the alphabet at least once.
                 </div>
                 <div>
-                    <div className='flex bg-secondary text-white rounded-xl justify-center items-center text-[18px] font-bold max-w-[190px]  px-5 py-2'> <FaPlay className='mr-2 text-[15px]' /> Start Free Test</div>
+                    <div className='flex bg-secondary text-white rounded-xl justify-center items-center text-[18px] font-bold max-w-[190px]  px-5 py-2 cursor-pointer hover:bg-amber-400 transition ease-in-out duration-200'> <FaPlay className='mr-2 text-[15px]' /> Start Free Test</div>
                 </div>
             </div>
         </div>
@@ -108,7 +108,7 @@ const HomeBody = () => {
 
 {/* -----------------Statistics--------------- */}
 
-    <div className="h-50 bg-primary flex justify-evenly" >
+    <div className="h-50 bg-primary flex justify-evenly flex-wrap" >
         <div className='flex flex-col justify-center items-center' >
             <h1 className='text-5xl font-bold text-secondary' >50K+</h1>
             <p className='text-xl text-white' >Active Users</p>
@@ -134,8 +134,8 @@ const HomeBody = () => {
         <h1 className='text-4xl font-bold ' >Ready to Improve Your Typing Speed?</h1>
         <p className='max-w-3xl text-center text-grey text-xl'>Join thousands of users who have already improved their typing skills with TypoSpeed. Start your journey today!</p>
         <div className='flex gap-4'>
-            <div className='flex p-3  bg-primary text-white text-xl font-bold rounded-xl justify-center items-center'> <HiUserAdd  className='m-2'/>  Create Free Account</div>
-            <div className='flex p-3  bg-white border-2 border-primary text-primary text-xl font-bold rounded-xl justify-center items-center' > <FaPlay className='mr-2 text-[15px] t '/> Try Without Signup</div>
+            <div className='flex p-3  bg-primary text-white text-xl font-bold rounded-xl justify-center items-center hover:bg-blue-800 cursor-pointer'> <HiUserAdd  className='m-2'/>  Create Free Account</div>
+            <div className='flex p-3  bg-white border-2 border-primary text-primary text-xl font-bold rounded-xl justify-center items-center hover:bg-primary hover:text-white cursor-pointer' > <FaPlay className='mr-2 text-[15px] t '/> Try Without Signup</div>
         </div>
     </div>
 
