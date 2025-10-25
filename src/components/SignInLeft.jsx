@@ -5,7 +5,8 @@ import "../index.css"
 
 const SignInLeft = () => {
     return (
-        <div className="flex flex-col items-center justify-center w-full h-auto md:max-w-120 md:h-[600px] bg-primary p-5 md:p-10 md:gap-8 gap-4 rounded-tl-2xl rounded-bl-2xl" >
+        <div className="flex flex-col items-center justify-center h-auto max-w-120 md:h-[600px]
+         bg-darkblue p-5 md:p-10 md:gap-8 gap-4 rounded-tl-2xl rounded-bl-2xl" >
             <div className="flex  items-center gap-2 font-extrabold text-2xl md:text-3xl">
                 <FaKeyboard className="text-blue-600"/>
                 <h1>TypoSpeed</h1>
