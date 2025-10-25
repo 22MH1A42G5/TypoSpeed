@@ -1,6 +1,17 @@
 @import "tailwindcss";
 
 @theme{
+  --color-darkblue:#2857c8;
+  --color-lightblue:#397df1;
+  --color-lightcolor:white;
+  --color-lightorange:#f59e0b;
+}
+
+body{
+  /* background-color: black; */
+  height: 100vh;
+  padding: 0;
+
   --color-primary : #3068da;
   --color-secondary:#f59e0b;
   --color-terinary:#22c55e;
