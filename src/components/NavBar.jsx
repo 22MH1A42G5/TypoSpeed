@@ -10,7 +10,7 @@ const NavBar = () => {
   
   return (
 
-    <header className='flex p-5 justify-around items-center ' >
+    <header className='flex p-5 justify-around items-center shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]' >
       <div className="icon flex items-center gap-2 ">
           <div className='w-10 h-10 bg-primary hover:bg-green-200 flex items-center justify-center rounded-md'>
               <FaKeyboard className='text-xl text-white' />
