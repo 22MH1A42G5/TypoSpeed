@@ -3,11 +3,11 @@ import { useDataBase } from '../context';
 
 // Redirects authenticated users away from auth pages (login/signup)
 export const AuthRoute = ({ children }) => {
-    const { user, loading } = useDataBase();
+    const { user, loading ,verified} = useDataBase();
     
     if (loading) return null; // or a loading spinner
     
-    if (user) {
+    if (user && verified) {
         return <Navigate to="/" replace />;
     }
 
@@ -16,11 +16,11 @@ export const AuthRoute = ({ children }) => {
 
 // Protects routes that require authentication
 export const PrivateRoute = ({ children }) => {
-    const { user, loading } = useDataBase();
+    const { user, loading,verified } = useDataBase();
     
     if (loading) return null; // or a loading spinner
     
-    if (!user) {
+    if (!user || !verified) {
         return <Navigate to="/login" replace />;
     }
 

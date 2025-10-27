@@ -20,14 +20,17 @@ export const DataProvider = (props) => {
     const [userEmail,setUserEmail] = useState("");
     const [loading, setLoading] = useState(true);
     const [uid , setUid] = useState(null);
+    const [verified,setVerified] = useState(false);
   
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(DataAuth, (currentUser) => {
             setUser(currentUser);
             setLoading(false);
+            setVerified(currentUser.emailVerified);
         });
         return () => unsubscribe();
     }, []);
+
     const signupUserWithEmailAndPassword = (email , password) => {
         return createUserWithEmailAndPassword(DataAuth , email , password);
     }
@@ -96,7 +99,7 @@ export const DataProvider = (props) => {
     }
 
     return (
-        <DataContext.Provider value={{uid,setUid ,user,setUser , signupUserWithEmailAndPassword , putData,loginUserWithEmailAndPassword,Logout,signUpWithGoogle, createUserProfileInFirestore , isUsernameAvailable}}>
+        <DataContext.Provider value={{uid,setUid ,user,setUser , signupUserWithEmailAndPassword , putData,loginUserWithEmailAndPassword,Logout,signUpWithGoogle, createUserProfileInFirestore , isUsernameAvailable,verified}}>
             {props.children}
         </DataContext.Provider>
     )
