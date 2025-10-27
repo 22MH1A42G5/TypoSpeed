@@ -40,7 +40,7 @@ const SignInRight = () => {
                 <p>OR</p>
                 <div className="h-px flex-1  bg-white"></div>
             </div>
-            <button className="flex items-center align-middle justify-center bg-[#95979c] hover:bg-white active:bg-[#95979c] p-1.5 rounded-[10px] gap-x-2 text-black w-full max-w-xs font-bold md:w-80">
+            <button className="flex items-center align-middle justify-center bg-white hover:bg-[#95979c] active:bg-white p-1.5 rounded-[10px] gap-x-2 text-black w-full max-w-xs font-bold md:w-80">
                 <FaGoogle />
                 Continue With Google
             </button>
