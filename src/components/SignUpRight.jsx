@@ -6,7 +6,9 @@ import { IoMail } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDataBase } from "../context";
+import toast from "react-hot-toast";
 import "../index.css"
+import { sendEmailVerification } from "firebase/auth";
 
 const SignUpRight = () => {
     const navigate = useNavigate();
@@ -17,13 +19,41 @@ const SignUpRight = () => {
     const handleSignup = async (e) => {
         e?.preventDefault();
         try {
+            if(!validateForm(mail , password)){
+                console.log("form Validation Fail");
+                return;
+            }
+            const available = await context.isUsernameAvailable(username);
+            if(!available){
+                console.log("username exists");
+                toast.error("username already exists");
+                return;
+            }
             const userCred = await context.signupUserWithEmailAndPassword(mail, password);
-            // optional: save extra user data to database here using `username`
-            navigate("/profile");
+            console.log(userCred);
+            const user = userCred.user;
+            await sendEmailVerification(user);
+            toast.success("Verification link send to your mail")
+
+            await context.createUserProfileInFirestore(mail, user.uid ,username , password);
+            context.setUid(userCred.user);
         } catch (err) {
             console.error("signup error", err);
             alert(err.message || "Signup failed");
         }
+        finally{
+            setUsername("");
+            setPassword("");
+            setMail("");
+        }
+    }
+    const validateForm = (mail , password) => {
+        // if (!formData.fullname.trim()) return toast.error("Full name is required");
+        if (!mail.trim()) return toast.error("Email is required");
+        if (!/\S+@\S+\.\S+/.test(mail)) return toast.error("Invalid email format");
+        if (!password) return toast.error("Password is required");
+        if (password.length < 8) return toast.error("Password must be at least 8 characters");
+        return true;
     }
     return (
         <div className="flex flex-col items-center justify-center p-3 md:p-10 min-w-100 h-[600px] bg-rightblack gap-3 md:gap-3 rounded-2xl md:rounded-tl-none md:rounded-bl-none md:rounded-tr-2xl md:rounded-br-2xl">
@@ -56,11 +86,14 @@ const SignUpRight = () => {
             </div>
             <button className="flex items-center justify-center rounded-[10px] p-1.5 gap-x-2 font-bold 
             w-full max-w-xs bg-blue-600 hover:bg-blue-500 active:bg-blue-600" 
-            onClick={ (e) => {
-                context.signupUserWithEmailAndPassword(mail , password);
-                context.putData('user/' + username , {mail , password});
-            }}>
-            {/* onClick={handleSignup}> */}
+            // onClick={ async (e) => {
+            //     // if(validateForm(mail , password)) return;
+            //     // console.log(validateForm());
+            //     await context.signupUserWithEmailAndPassword(mail , password);
+            //     await context.createUserProfileInFirestore(mail,username ,"Anonymous")
+            //     // context.putData('user/' + username , {mail , password});
+            // }}>
+            onClick={handleSignup}>
                 Create Account
             </button>
             <div id = "or-div" className="flex items-center justify-center gap-x-2 w-full">
