@@ -3,7 +3,6 @@ import { FaGoogle } from "react-icons/fa";
 import { FaLock } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import "../index.css"
 
 const SignInRight = () => {
