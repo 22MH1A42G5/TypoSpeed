@@ -86,7 +86,7 @@ const SignUpRight = () => {
                 </div>
             </div>
             <button className="flex items-center justify-center rounded-[10px] p-1.5 gap-x-2 font-bold 
-            w-full max-w-xs bg-blue-600 hover:bg-blue-500 active:bg-blue-600" 
+            w-full max-w-xs bg-blue-600 hover:bg-blue-500 active:bg-blue-600 cursor-pointer " 
             // onClick={ async (e) => {
             //     // if(validateForm(mail , password)) return;
             //     // console.log(validateForm());
@@ -102,7 +102,7 @@ const SignUpRight = () => {
                 <p>OR</p>
                 <div className="h-px flex-1 md:min-w-[75px] bg-white"></div>
             </div>
-            <button className="flex items-center align-middle justify-center bg-white hover:bg-[#95979c] active:bg-white p-1.5 rounded-[10px] gap-x-2 text-black w-full max-w-xs font-bold md:w-80">
+            <button onClick={context.signUpWithGoogle} className="flex cursor-pointer items-center align-middle justify-center bg-white hover:bg-[#95979c] active:bg-white p-1.5 rounded-[10px] gap-x-2 text-black w-full max-w-xs font-bold md:w-80">
                 <FaGoogle />
                 Continue With Google
             </button>
@@ -115,7 +115,7 @@ const SignUpRight = () => {
 
             <div className="flex gap-2 text-sm md:text-base">
                 <p>Already Have an account?</p>
-                <a className="" onClick={e => navigate("/login")}>Sign In</a>
+                <a className="cursor-pointer text-[#3e94e3]" onClick={e => navigate("/login")}>Sign In</a>
             </div>
 
         </div>

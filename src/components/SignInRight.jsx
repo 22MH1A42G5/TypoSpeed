@@ -19,7 +19,7 @@ const SignInRight = () => {
         .then((e)=>{
             const obj = e.user;
             if(obj.emailVerified === false){
-                toast.success("Verify  by clicking link sent to your mail")
+                toast.error("Verify  by clicking link sent to your mail")
             }else{
                 navigate('/practice')
             }
@@ -61,7 +61,7 @@ const SignInRight = () => {
             <div className="w-full max-w-xs">
                 <div className="flex justify-between">
                     <label>Password</label>
-                    <a href="" className="">Forgot password?</a>
+                    <a href="" className="text-[#3e94e3]">Forgot password?</a>
                 </div>
                 <div className="focus:outline-blue-500 flex items-center border-2 rounded-[10px] h-10 gap-2">
                     <FaLock className="size-5 ml-3 mr-1 "/>
@@ -82,7 +82,7 @@ const SignInRight = () => {
             </button>
             <div className="flex gap-2 text-sm md:text-base">
                 <p>Don't Have an account?</p>
-                <a className="cursor-pointer" onClick={ e => navigate("/signup") } >Sign Up</a>
+                <a className="cursor-pointer text-[#3e94e3]" onClick={ e => navigate("/signup") } >Sign Up</a>
             </div>
 
         </div>

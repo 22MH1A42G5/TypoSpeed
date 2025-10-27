@@ -5,10 +5,11 @@ import { FaMoon } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useDataBase } from '../context';
 import profileImg from '../assets/profileImg.jpeg'
+
 const NavBar = () => {
   const context = useDataBase();
   const nav = useNavigate();
-  const user = context.user;
+  // const user = context.user;
   return (
 
     <header className='flex p-5 justify-around items-center shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]' >
@@ -28,7 +29,7 @@ const NavBar = () => {
           {/* <a onClick={()=>{Navigate('/practice')}} href=""></a> */}
       </div>
       {
-        (!user)?
+        (!(context.user) || !(context.verified) )?
       <div className='flex gap-3 justify-center items-center'>
           {/* <button ><FaMoon /></button> */}
           <button onClick={() => nav('/login')} className='border-primary border-2 w-20 h-11 rounded-md transition duration-200 cursor-pointer hover:bg-primary hover:text-white text-primary' >Sign In</button>
