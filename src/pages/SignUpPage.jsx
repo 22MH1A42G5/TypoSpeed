@@ -4,7 +4,7 @@ import SignUpRight from "../components/SignUpRight";
 
 const SignUpPage = () => {
     return (
-       <div className= "flex flex-col md:flex-row min-h-screen align-middle items-center justify-center  text-white bg-[#111827]">
+       <div className= "flex flex-col md:flex-row min-h-screen align-middle items-center justify-center  text-white bg-white">
             <div className="hidden md:block">
                 <SignUpLeft />
             </div>

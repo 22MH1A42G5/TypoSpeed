@@ -1,13 +1,30 @@
 import React from "react";
 import { FaGoogle } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
-import { FaLock } from "react-icons/fa6";
+import { FaLock } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useDataBase } from "../context";
 import "../index.css"
+
 
 const SignUpRight = () => {
     const navigate = useNavigate();
+    const context = useDataBase();
+    const [username , setUsername] = useState('');
+    const [mail , setMail] = useState('');
+    const [password , setPassword] = useState('');
+
+    const validateForm = () => {
+        if (!formData.fullname.trim()) return toast.error("Full name is required");
+        if (!formData.email.trim()) return toast.error("Email is required");
+        if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+        if (!formData.password) return toast.error("Password is required");
+        if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
+        return true;
+    }
+    
     return (
         <div className="flex flex-col items-center justify-center p-3 md:p-10 min-w-100 h-[600px] bg-rightblack gap-3 md:gap-3 rounded-2xl md:rounded-tl-none md:rounded-bl-none md:rounded-tr-2xl md:rounded-br-2xl">
             <h1 className=" text-xl md:text-2xl font-bold">Create Account</h1>
@@ -17,14 +34,14 @@ const SignUpRight = () => {
                 <label>Username</label>
                 <div className="focus:outline-blue-500 flex items-center border-2 rounded-[10px] h-10 gap-2">
                     <FaUser className="size-5 ml-3 mr-1 "/>
-                    <input type="text" className="outline-0 w-full rounded-[10px] h-10" placeholder="Enter a username" />
+                    <input onChange={e => setUsername(e.target.value)} value={username} type="text" className="outline-0 w-full rounded-[10px] h-10" placeholder="Enter a username" />
                 </div>
             </div>
             <div className="flex flex-col w-80 max-w-sx">
                 <label>Email Address</label>
                 <div className="focus:outline-blue-500 flex items-center border-2 rounded-[10px] h-10 gap-2">
                     <IoMail className="size-7 ml-2 "/>
-                    <input type="email" className="outline-0 w-full rounded-[10px] h-10" placeholder="you@example.com" />
+                    <input onChange={ e => setMail(e.target.value)} value={mail} type="email" className="outline-0 w-full rounded-[10px] h-10" placeholder="you@example.com" />
                 </div>
             </div>
             <div className="w-full max-w-xs">
@@ -34,10 +51,16 @@ const SignUpRight = () => {
                 
                 <div className="focus:outline-blue-500 flex items-center border-2 rounded-[10px] h-10 gap-2">
                     <FaLock className="size-5 ml-2 mr-1 "/>
-                    <input type="password" className="outline-0 w-full rounded-[10px] h-10" placeholder="Minumim 8 characters" />
+                    <input onChange = {e => setPassword(e.target.value)} value={password} type="password" className="outline-0 w-full rounded-[10px] h-10" placeholder="Minumim 8 characters" />
                 </div>
             </div>
-            <button className="flex items-center justify-center rounded-[10px] p-1.5 gap-x-2 font-bold w-full max-w-xs bg-blue-600 hover:bg-blue-500 active:bg-blue-600">
+            <button className="flex items-center justify-center rounded-[10px] p-1.5 gap-x-2 font-bold 
+            w-full max-w-xs bg-blue-600 hover:bg-blue-500 active:bg-blue-600" 
+            // onClick={ (e) => {
+            //     context.signupUserWithEmailAndPassword(mail , password);
+            //     context.putData('user/' + username , {mail , password});
+            // }}>
+            onClick={handleSignup}> 
                 Create Account
             </button>
             <div id = "or-div" className="flex items-center justify-center gap-x-2 w-full">
@@ -45,7 +68,7 @@ const SignUpRight = () => {
                 <p>OR</p>
                 <div className="h-px flex-1 md:min-w-[75px] bg-white"></div>
             </div>
-            <button className="flex items-center align-middle justify-center bg-white p-1.5 rounded-[10px] gap-x-2 text-black w-full max-w-xs font-bold md:w-80">
+            <button className="flex items-center align-middle justify-center bg-white hover:bg-[#95979c] active:bg-white p-1.5 rounded-[10px] gap-x-2 text-black w-full max-w-xs font-bold md:w-80">
                 <FaGoogle />
                 Continue With Google
             </button>

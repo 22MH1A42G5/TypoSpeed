@@ -12,7 +12,7 @@ import { IoColorPalette } from "react-icons/io5";
 
 const HomeBody = () => {
     const [tryText,setTryText] = useState("");
-
+    
   return (
     <>
     <div className='p-15 bg-primary text-white  line-h flex justify-center items-center flex-wrap gap-20 md:p-30  ' >

@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 resources
+Credentials.jsx
 
 # Editor directories and files
 .vscode/*
