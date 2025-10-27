@@ -6,16 +6,32 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import ProfilePage from './pages/ProfilePage';
 import Practice from './pages/Practice';
+import { AuthRoute, PrivateRoute } from './components/ProtectedRoute';
 
 function App() {
-
   return (
     <Routes>
-      <Route path="/login" element ={<SignInPage />} ></Route>
-      <Route path="/signup" element={<SignUpPage />}></Route>
-      <Route path= "/" element = {<Home/>}></Route>
-      <Route path='/profile' element = {<ProfilePage />}></Route>
-      <Route path='/practice' element = {<Practice/>} > </Route>
+      <Route path="/login" element={
+        <AuthRoute>
+          <SignInPage />
+        </AuthRoute>
+      } />
+      <Route path="/signup" element={
+        <AuthRoute>
+          <SignUpPage />
+        </AuthRoute>
+      } />
+      <Route path="/" element={<Home/>} />
+      <Route path='/profile' element={
+        <PrivateRoute>
+          <ProfilePage />
+        </PrivateRoute>
+      } />
+      <Route path='/practice' element={
+        <PrivateRoute>
+          <Practice />
+        </PrivateRoute>
+      } />
     </Routes>
   )
 }

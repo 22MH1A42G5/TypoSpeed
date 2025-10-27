@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import "../index.css"
 import { sendEmailVerification } from "firebase/auth";
 
+
 const SignUpRight = () => {
     const navigate = useNavigate();
     const context = useDataBase();

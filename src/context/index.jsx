@@ -1,7 +1,7 @@
 import React from "react";
 import { createContext, useState , useEffect , useContext} from "react";
 import { app } from "../Credentials";
-import {getAuth , GoogleAuthProvider , createUserWithEmailAndPassword , onAuthStateChanged , signOut , signInWithPopup} from 'firebase/auth'
+import {getAuth , GoogleAuthProvider , createUserWithEmailAndPassword , onAuthStateChanged , signOut , signInWithPopup, signInWithEmailAndPassword} from 'firebase/auth'
 import {set , ref , get , onValue, getDatabase } from 'firebase/database'
 import {doc , getDoc , getFirestore, setDoc} from 'firebase/firestore'
 
@@ -16,7 +16,18 @@ const fireStoreDB = getFirestore(app);
 
 
 export const DataProvider = (props) => {
+    const [user , setUser] = useState(null);
+    const [userEmail,setUserEmail] = useState("");
+    const [loading, setLoading] = useState(true);
     const [uid , setUid] = useState(null);
+  
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(DataAuth, (currentUser) => {
+            setUser(currentUser);
+            setLoading(false);
+        });
+        return () => unsubscribe();
+    }, []);
     const signupUserWithEmailAndPassword = (email , password) => {
         return createUserWithEmailAndPassword(DataAuth , email , password);
     }
@@ -71,8 +82,21 @@ export const DataProvider = (props) => {
     const putData = (key , data) => {
         set(ref(database , key) , data);
     }
+
+    const Logout = ()=>{
+        signOut(DataAuth);
+    }
+
+    const signUpWithGoogle = ()=>{
+        signInWithPopup(DataAuth,GoogleProvider);
+    }
+
+    const loginUserWithEmailAndPassword = async (email,password)=>{
+        return signInWithEmailAndPassword(DataAuth,email,password);
+    }
+
     return (
-        <DataContext.Provider value={{uid,setUid , signupUserWithEmailAndPassword , putData , createUserProfileInFirestore , isUsernameAvailable}}>
+        <DataContext.Provider value={{uid,setUid ,user,setUser , signupUserWithEmailAndPassword , putData,loginUserWithEmailAndPassword,Logout,signUpWithGoogle, createUserProfileInFirestore , isUsernameAvailable}}>
             {props.children}
         </DataContext.Provider>
     )

@@ -1,13 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { FaLock } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../index.css"
+import toast from "react-hot-toast";
+import { useDataBase } from "../context";
+import { set } from "firebase/database";
 
 const SignInRight = () => {
     const navigate = useNavigate();
+    const [email,setEmail] = useState();
+    const [password,setPassword] = useState();
+    const context = useDataBase();
+    const handleSignIn = ()=>{
+        (context.loginUserWithEmailAndPassword(email,password))
+        .then((e)=>{
+            const obj = e.user;
+            if(obj.emailVerified === false){
+                toast.success("Verify  by clicking link sent to your mail")
+            }else{
+                navigate('/practice')
+            }
+        })
+        .catch((err) =>{
+            switch (err.code) {
+                case "auth/wrong-password":
+                    toast.error("Wrong password");
+                    break;
+                case "auth/user-not-found":
+                    toast.error("No account found with this email");
+                    break;
+                case "auth/invalid-email":
+                    toast.error("Email address is not valid");
+                    break;
+                default:
+                    toast.error("Use best laptop")
+            }
+        } 
+            
+        );
+    }
+
+
     return (
         <div className="flex flex-col items-center justify-center p-3 md:p-10 
         min-w-100 h-[600px] bg-rightblack    gap-3 md:gap-5 rounded-2xl md:rounded-tl-none md:rounded-bl-none 
@@ -19,7 +55,7 @@ const SignInRight = () => {
                 <label>Email Address</label>
                 <div className="focus:outline-blue-500 flex items-center border-2 rounded-[10px] h-10 gap-2">
                     <IoMail className="size-7 ml-2 "/>
-                    <input type="email" className="outline-0 w-full rounded-[10px] h-10" />
+                    <input value={email} onChange={(e)=> setEmail(e.target.value)} type="email" className="outline-0 w-full rounded-[10px] h-10" />
                 </div>
             </div>
             <div className="w-full max-w-xs">
@@ -29,10 +65,10 @@ const SignInRight = () => {
                 </div>
                 <div className="focus:outline-blue-500 flex items-center border-2 rounded-[10px] h-10 gap-2">
                     <FaLock className="size-5 ml-3 mr-1 "/>
-                    <input type="password" className="outline-0 w-full rounded-[10px] h-10 " />
+                    <input value={password} onChange={(e)=> setPassword(e.target.value)} type="password" className="outline-0 w-full rounded-[10px] h-10 " />
                 </div>
             </div>
-            <button className="flex items-center justify-center bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-[10px] p-1.5 gap-x-2 font-bold w-full max-w-xs">
+            <button onClick={()=>{handleSignIn()}} className="flex items-center cursor-pointer justify-center bg-blue-600 hover:bg-blue-500 active:bg-blue-600 rounded-[10px] p-1.5 gap-x-2 font-bold w-full max-w-xs">
                 Sign In
             </button>
             <div id = "or-div" className="flex items-center justify-center gap-x-2 w-full">
@@ -40,13 +76,13 @@ const SignInRight = () => {
                 <p>OR</p>
                 <div className="h-px flex-1  bg-white"></div>
             </div>
-            <button className="flex items-center align-middle justify-center bg-white hover:bg-[#95979c] active:bg-white p-1.5 rounded-[10px] gap-x-2 text-black w-full max-w-xs font-bold md:w-80">
+            <button onClick={()=>context.signUpWithGoogle()} className="flex items-center align-middle justify-center bg-white cursor-pointer hover:bg-[#95979c] active:bg-white p-1.5 rounded-[10px] gap-x-2 text-black w-full max-w-xs font-bold md:w-80">
                 <FaGoogle />
                 Continue With Google
             </button>
             <div className="flex gap-2 text-sm md:text-base">
                 <p>Don't Have an account?</p>
-                <a className="" onClick={ e => navigate("/signup")}>Sign Up</a>
+                <a className="cursor-pointer" onClick={ e => navigate("/signup") } >Sign Up</a>
             </div>
 
         </div>
