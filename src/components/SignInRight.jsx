@@ -17,12 +17,7 @@ const SignInRight = () => {
     const handleSignIn = ()=>{
         (context.loginUserWithEmailAndPassword(email,password))
         .then((e)=>{
-            const obj = e.user;
-            if(obj.emailVerified === false){
-                toast.error("Verify  by clicking link sent to your mail")
-            }else{
-                navigate('/practice')
-            }
+                navigate('/')
         })
         .catch((err) =>{
             switch (err.code) {

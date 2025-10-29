@@ -38,6 +38,7 @@ const SignUpRight = () => {
 
             await context.createUserProfileInFirestore(mail, user.uid ,username , password);
             context.setUid(userCred.user);
+            navigate('/')
         } catch (err) {
             console.error("signup error", err);
             alert(err.message || "Signup failed");
