@@ -7,7 +7,7 @@ const Home = () => {
   const context = useDataBase();
   return (
     <div>
-      {/* {console.log(context.user.emailVerified)} */}
+      {console.log(context.user)}
         <NavBar />
         <HomeBody/>
         <ContactUs/>

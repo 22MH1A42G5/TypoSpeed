@@ -35,7 +35,7 @@ const SignUpRight = () => {
             const user = userCred.user;
             await sendEmailVerification(user);
             toast.success("Verification link send to your mail")
-
+            // await context.saveTypingSession(context.user.uid , context.userStats);
             await context.createUserProfileInFirestore(mail, user.uid ,username , password);
             context.setUid(userCred.user);
         } catch (err) {
@@ -48,6 +48,27 @@ const SignUpRight = () => {
             setMail("");
         }
     }
+
+    
+    // const addSessions = async () => {
+    //     const stats = {
+    //         wpm: +(Math.random() * 60 + 40).toFixed(2),            // 40–100 WPM
+    //         accuracy: +(Math.random() * 20 + 80).toFixed(2),       // 80–100%
+    //         errors: Math.floor(Math.random() * 10),                // 0–9 errors
+    //         duration: Math.floor(Math.random() * 120) + 30,            // 30–150 sec
+    //         charsTyped: Math.floor(Math.random() * 300) + 100,     // 100–400 chars
+    //         wordsTyped: Math.floor(Math.random() * 80) + 20,        // 20–100 words
+    //         textId : 1
+    //     };
+
+    //     await context.saveTypingSession(context.user.uid , stats);
+    // }
+    // const updateUserStats = async () => {
+    //     const wpm = Math.floor(Math.random() * 100) + 1;
+    //     const accuracy = parseFloat((Math.random() * (100 - 60) + 60).toFixed(2));
+    //     await context.updateUserStats(context.user.uid ,wpm , accuracy );
+    //     console.log("Update Done");
+    // }
     const validateForm = (mail , password) => {
         // if (!formData.fullname.trim()) return toast.error("Full name is required");
         if (!mail.trim()) return toast.error("Email is required");
@@ -106,6 +127,12 @@ const SignUpRight = () => {
                 <FaGoogle />
                 Continue With Google
             </button>
+            {/* <button onClick={ (e) => addSessions()} className="bg-white text-black">
+                Add Session
+            </button> */}
+            {/* <button onClick={ (e) => updateUserStats()} className="bg-white text-black">
+                Update UserStats
+            </button> */}
             <p className="text-[10px] flex gap-1">
                 By signing up, you agree to our
                 <a href="" className="underline"> Terms of Service</a> 
