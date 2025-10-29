@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import { FaPlay } from "react-icons/fa";
 import { FaCircle } from "react-icons/fa";
 import { GoGraph } from "react-icons/go";
@@ -9,9 +9,40 @@ import { RiTeamFill } from "react-icons/ri";
 import { GiTrophyCup } from "react-icons/gi";
 import { HiMiniUserCircle } from "react-icons/hi2";
 import { IoColorPalette } from "react-icons/io5";
-
+import { useRef } from 'react';
 const HomeBody = () => {
-    const [tryText,setTryText] = useState("");
+    const targetText = "The quick brown fox jumps over the layz dog. This pangram sentence contains every letter of the alphabet at least once.";
+    const containerRef = useRef(null);
+    const [typedText,setTypedText] = useState("");
+    const [isActive,setIsActive] = useState(false);
+    const targetArray = targetText.split(" ");
+    const target = targetArray.map((str,index)=>{ if(index == targetArray.length -1) return str; return (str+" ")})
+    // useEffect(() => {
+    //     if (isActive && containerRef.current) {
+    //     containerRef.current.focus();
+    //     }
+    // }, [isActive]);
+
+    const handleKeyDown = (e) => {
+        console.log(e.key);
+        e.preventDefault();
+    
+      if (e.key.length === 1) {
+        setTypedText((prev) => prev + e.key);
+      } else if (e.key === "Backspace") {
+        setTypedText((prev) => prev.slice(0, -1));
+      }
+    };
+    useEffect(() => {
+    if (!isActive) return;
+
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup listener
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isActive]);
+
     
   return (
     <>
@@ -84,7 +115,7 @@ const HomeBody = () => {
         <div className='flex justify-center flex-col  items-center gap-20'>
             <div className='flex items-center flex-col gap-4 '>
             <h1 className='text-3xl font-bold '>Try TypoSpeed Now</h1>
-            <p className='text-xl text-grey' >Experience the power of real-time typing analysis with our interactive demo</p>
+            <p className='text-xl text-grey' >  </p>
             </div>
             <div className='px-7 py-7 h-85 max-w-200 bg-white border-3 rounded-xl border-[#e5e7eb] flex flex-col gap-5 '>
                 <div className='flex justify-between'>
@@ -96,11 +127,44 @@ const HomeBody = () => {
                     </div>
                     <div className='flex justify-center items-center gap-3 bg-primary rounded-xl h-10 p-3 text-white  hover:bg-blue-700 cursor-pointer'><FaUndoAlt />Reset</div>
                 </div>
-                <div className='bg-lightgrey flex align-middle items-center p-8 rounded-xl text-base text-grey tracking-widest' >
-                    The quick brown fox jumps over the layz | dog. This pangram sentence contains every letter of the alphabet at least once.
+                <div  
+                    ref = {containerRef}
+                    tabIndex={0}
+                    onKeyDown={handleKeyDown}
+                    className='bg-lightgrey flex align-middle flex-wrap items-center p-8 rounded-xl text-base text-grey tracking-widest' 
+                    >
+                    {/* The quick brown fox jumps over the lazy | dog. This pangram sentence contains every letter of the alphabet at least once. */}
+                    {
+                        target.map((word , index)=>{
+                            return (
+                                
+                                <span key={index} >
+                                    {
+                                        word.split("").map((char,ind)=>{
+                                            const temp = [...target];
+                                            const globalIndex = temp.splice(0,index).join("").length + ind;
+                                        let color = "bg-grey-500";
+                                        if(typedText.length > globalIndex ){
+                                            if(char == typedText[globalIndex]){
+                                                color = "text-green-500";
+                                            }else color = "bg-red-100 text-red-600";
+                                        }
+                                        if(globalIndex == typedText.length) color = "bg-blue-600 text-white"
+                                        return (
+                                            <span key={ind} className={color}>
+                                                {char === " " ? "\u00A0" : char}
+                                            </span>)
+                                        })}
+                                        
+                                        
+                                </span>
+                            )
+                        })
+                    }
+                {/* <input type="text"  className='border-0 outline-0 absolute h-full w-full caret-transparent text-gray-900 opacity-0 select-none' onChange={(e)=>setTypedText(e.target.value)} /> */}
                 </div>
                 <div>
-                    <div className='flex bg-secondary text-white rounded-xl justify-center items-center text-[18px] font-bold max-w-[190px]  px-5 py-2 cursor-pointer hover:bg-amber-400 transition ease-in-out duration-200'> <FaPlay className='mr-2 text-[15px]' /> Start Free Test</div>
+                    <div onClick={()=>{setIsActive((prev) => !prev)}} className='flex bg-secondary text-white rounded-xl justify-center items-center text-[18px] font-bold max-w-[190px]  px-5 py-2 cursor-pointer hover:bg-amber-400 transition ease-in-out duration-200'> <FaPlay className='mr-2 text-[15px]' /> Start Free Test</div>
                 </div>
             </div>
         </div>

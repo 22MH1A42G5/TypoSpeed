@@ -7,7 +7,7 @@ import SignUpPage from "./pages/SignUpPage";
 import ProfilePage from './pages/ProfilePage';
 import Practice from './pages/Practice';
 import { AuthRoute, PrivateRoute } from './components/ProtectedRoute';
-
+import Test from './components/Test'
 function App() {
   return (
     <Routes>
