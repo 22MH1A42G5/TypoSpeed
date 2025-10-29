@@ -12,9 +12,9 @@ dist
 dist-ssr
 *.local
 resources
-Credentials.jsx
 
 # Editor directories and files
+Credentials.jsx
 .vscode/*
 !.vscode/extensions.json
 .idea
