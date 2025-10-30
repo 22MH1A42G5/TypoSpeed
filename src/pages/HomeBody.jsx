@@ -10,40 +10,105 @@ import { GiTrophyCup } from "react-icons/gi";
 import { HiMiniUserCircle } from "react-icons/hi2";
 import { IoColorPalette } from "react-icons/io5";
 import { useRef } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+
 const HomeBody = () => {
     const targetText = "The quick brown fox jumps over the layz dog. This pangram sentence contains every letter of the alphabet at least once.";
     const containerRef = useRef(null);
     const [typedText,setTypedText] = useState("");
     const [isActive,setIsActive] = useState(false);
+    const [Accuracy,setAccuracy] = useState(100);
+    const [WPM,setWPM] = useState(0);
     const targetArray = targetText.split(" ");
+    const [time, setTime] = useState(0);
+    const [errors,setErrors] = useState(0);
+    const intervalRef = useRef(null);
+    const nav = useNavigate();
     const target = targetArray.map((str,index)=>{ if(index == targetArray.length -1) return str; return (str+" ")})
     // useEffect(() => {
     //     if (isActive && containerRef.current) {
     //     containerRef.current.focus();
     //     }
     // }, [isActive]);
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, "0")}`;
+    };
+
+    // const handleKeyDown = (e) => {
+    //     if (e.ctrlKey || e.metaKey || e.altKey) return;
+    //   if (e.key.length === 1) {
+    //     e.preventDefault();
+    //     setTypedText((prev) => prev + e.key);
+    //   } else if (e.key === "Backspace") {
+    //     e.preventDefault();
+    //     setTypedText((prev) => prev.slice(0, -1));
+    //   }
+    // };
+
+    
 
     const handleKeyDown = (e) => {
-        console.log(e.key);
-        e.preventDefault();
-    
-      if (e.key.length === 1) {
-        setTypedText((prev) => prev + e.key);
-      } else if (e.key === "Backspace") {
-        setTypedText((prev) => prev.slice(0, -1));
-      }
+        
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        if (e.key.length === 1) {
+            e.preventDefault();
+            setTypedText((prev) => {
+                const nextText = prev + e.key;
+                const nextCharIndex = prev.length;
+                if (e.key !== targetText[nextCharIndex]) {
+                    setErrors((prevErr) => prevErr + 1);
+                }
+                return nextText;
+            });
+        } else if (e.key === "Backspace") {
+            e.preventDefault();
+            setTypedText((prev) => prev.slice(0, -1));
+        }
     };
+
+    useEffect(()=>{
+        if(time !== 0)
+        setWPM((typedText.length*12)/time);
+        setAccuracy((((targetText.length - errors)/targetText.length) * 100).toFixed(0))
+        if(typedText.length === targetText.length){
+            resetTest();
+            alert(`Test Completed \nYour WPM : ${WPM.toFixed(0)} \n Your Accuracy : ${Accuracy} \n Your Errors : ${errors}`);
+        }
+    },[typedText])
+
     useEffect(() => {
-    if (!isActive) return;
+        if (isActive) {
+        intervalRef.current = setInterval(() => {
+            setTime((prev) => prev + 1);
+        }, 1000);
+    } else {
+        clearInterval(intervalRef.current);
+    }
+        return () => clearInterval(intervalRef.current);
+    }, [isActive]);
 
 
-    window.addEventListener("keydown", handleKeyDown);
 
-    // Cleanup listener
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isActive]);
+    useEffect(() => {
+        if (!isActive) return;
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isActive]);
 
-    
+    const progress = Math.min((typedText.length / targetText.length) * 100, 100);
+
+    const resetTest = () => {
+        clearInterval(intervalRef.current);
+        setErrors(0);
+        setAccuracy(100);
+        setWPM(0);
+        setTypedText("");
+        setTime(0);
+        setIsActive(false);
+    };
+
   return (
     <>
     <div className='p-15 bg-primary text-white  line-h flex justify-center items-center flex-wrap gap-20 md:p-30  ' >
@@ -120,20 +185,19 @@ const HomeBody = () => {
             <div className='px-7 py-7 h-85 max-w-200 bg-white border-3 rounded-xl border-[#e5e7eb] flex flex-col gap-5 '>
                 <div className='flex justify-between'>
                     <div className='flex gap-5 text-grey'>
-                        <div className='flex flex-col justify-center items-center'><p className='text-primary font-bold text-3xl'>75</p><p>WPM</p></div>
-                        <div className='flex flex-col justify-center items-center'><p className='text-terinary font-bold text-3xl'>94%</p><p>Accuracy</p></div>
-                        <div className='flex flex-col justify-center items-center'><p className='text-secondary font-bold text-3xl' >2</p><p>Errors</p></div>
-                        <div className='flex flex-col justify-center items-center'><p className='text-black font-bold text-3xl'>0:45</p><p>Time</p></div>
+                        <div className='flex flex-col justify-center items-center'><p className='text-primary font-bold text-3xl'>{WPM.toFixed(0)}</p><p>WPM</p></div>
+                        <div className='flex flex-col justify-center items-center'><p className='text-terinary font-bold text-3xl'>{Accuracy}%</p><p>Accuracy</p></div>
+                        <div className='flex flex-col justify-center items-center'><p className='text-secondary font-bold text-3xl' >{errors}</p><p>Errors</p></div>
+                        <div className='flex flex-col justify-center items-center'><p className='text-black font-bold text-3xl'>{formatTime(time)}</p><p>Time</p></div>
                     </div>
-                    <div className='flex justify-center items-center gap-3 bg-primary rounded-xl h-10 p-3 text-white  hover:bg-blue-700 cursor-pointer'><FaUndoAlt />Reset</div>
+                    <div onClick={()=>{ resetTest()}} className='flex justify-center items-center gap-3 bg-primary rounded-xl h-10 p-3 text-white  hover:bg-blue-700 cursor-pointer'><FaUndoAlt />Reset</div>
                 </div>
                 <div  
                     ref = {containerRef}
                     tabIndex={0}
                     onKeyDown={handleKeyDown}
-                    className='bg-lightgrey flex align-middle flex-wrap items-center p-8 rounded-xl text-base text-grey tracking-widest' 
+                    className='bg-lightgrey flex align-middle flex-wrap items-center p-4 rounded-xl text-[20px] text-grey tracking-widest' 
                     >
-                    {/* The quick brown fox jumps over the lazy | dog. This pangram sentence contains every letter of the alphabet at least once. */}
                     {
                         target.map((word , index)=>{
                             return (
@@ -147,7 +211,8 @@ const HomeBody = () => {
                                         if(typedText.length > globalIndex ){
                                             if(char == typedText[globalIndex]){
                                                 color = "text-green-500";
-                                            }else color = "bg-red-100 text-red-600";
+                                                // setErrors((prev)=>prev+1);
+                                            }else{  color = "bg-red-100 text-red-600";}
                                         }
                                         if(globalIndex == typedText.length) color = "bg-blue-600 text-white"
                                         return (
@@ -164,7 +229,14 @@ const HomeBody = () => {
                 {/* <input type="text"  className='border-0 outline-0 absolute h-full w-full caret-transparent text-gray-900 opacity-0 select-none' onChange={(e)=>setTypedText(e.target.value)} /> */}
                 </div>
                 <div>
-                    <div onClick={()=>{setIsActive((prev) => !prev)}} className='flex bg-secondary text-white rounded-xl justify-center items-center text-[18px] font-bold max-w-[190px]  px-5 py-2 cursor-pointer hover:bg-amber-400 transition ease-in-out duration-200'> <FaPlay className='mr-2 text-[15px]' /> Start Free Test</div>
+                    { (!isActive) ? <div onClick={()=>{setIsActive((prev) => !prev);}} className='flex bg-secondary text-white rounded-xl justify-center items-center text-[18px] font-bold max-w-[190px]  px-5 py-2 cursor-pointer hover:bg-amber-400 transition ease-in-out duration-200'> <FaPlay className='mr-2 text-[15px]' /> Start Free Test</div>
+                    : <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-blue-600 transition-all duration-300"
+          style={{ width: `${progress}%` }}
+        ></div>
+      </div>
+                    }
                 </div>
             </div>
         </div>
@@ -198,8 +270,8 @@ const HomeBody = () => {
         <h1 className='text-4xl font-bold ' >Ready to Improve Your Typing Speed?</h1>
         <p className='max-w-3xl text-center text-grey text-xl'>Join thousands of users who have already improved their typing skills with TypoSpeed. Start your journey today!</p>
         <div className='flex gap-4'>
-            <div className='flex p-3  bg-primary text-white text-xl font-bold rounded-xl justify-center items-center hover:bg-blue-800 cursor-pointer'> <HiUserAdd  className='m-2'/>  Create Free Account</div>
-            <div className='flex p-3  bg-white border-2 border-primary text-primary text-xl font-bold rounded-xl justify-center items-center hover:bg-primary hover:text-white cursor-pointer' > <FaPlay className='mr-2 text-[15px] t '/> Try Without Signup</div>
+            <div onClick={()=>{ nav('/signup')}} className='flex p-3  bg-primary text-white text-xl font-bold rounded-xl justify-center items-center hover:bg-blue-800 cursor-pointer'> <HiUserAdd  className='m-2'/>  Create Free Account</div>
+            <div onClick={()=>{ nav('/login')}} className='flex p-3  bg-white border-2 border-primary text-primary text-xl font-bold rounded-xl justify-center items-center hover:bg-primary hover:text-white cursor-pointer' > <FaPlay className='mr-2 text-[15px] t '/> Try Without Signup</div>
         </div>
     </div>
 
