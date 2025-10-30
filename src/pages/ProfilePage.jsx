@@ -17,25 +17,25 @@ const ProfilePage = () => {
     const [loadingProfile, setLoadingProfile] = useState(true);
     const [loadingSessions, setLoadingSessions] = useState(true);
 
-    const addSessions = async () => {
-        const stats = {
-            wpm: +(Math.random() * 60 + 40).toFixed(0),            // 40–100 WPM
-            accuracy: +(Math.random() * 20 + 80).toFixed(2),       // 80–100%
-            errors: Math.floor(Math.random() * 10),                // 0–9 errors
-            duration: Math.floor(Math.random() * 120) + 30,            // 30–150 sec
-            charsTyped: Math.floor(Math.random() * 300) + 100,     // 100–400 chars
-            wordsTyped: Math.floor(Math.random() * 80) + 20,        // 20–100 words
-            textId : 1
-        };
+    // const addSessions = async () => {
+    //     const stats = {
+    //         wpm: +(Math.random() * 60 + 40).toFixed(0),            // 40–100 WPM
+    //         accuracy: +(Math.random() * 20 + 80).toFixed(2),       // 80–100%
+    //         errors: Math.floor(Math.random() * 10),                // 0–9 errors
+    //         duration: Math.floor(Math.random() * 120) + 30,            // 30–150 sec
+    //         charsTyped: Math.floor(Math.random() * 300) + 100,     // 100–400 chars
+    //         wordsTyped: Math.floor(Math.random() * 80) + 20,        // 20–100 words
+    //         textId : 1
+    //     };
 
-        await context.saveTypingSession(context.user.uid , stats);
-        const updatedSessions = await context.getAllSessions(context.user.uid);
-        setSessions(updatedSessions);
-        await new Promise((r) => setTimeout(r, 500));
+    //     await context.saveTypingSession(context.user.uid , stats);
+    //     const updatedSessions = await context.getAllSessions(context.user.uid);
+    //     setSessions(updatedSessions);
+    //     await new Promise((r) => setTimeout(r, 500));
 
-        const updatedUserData = await context.getUserProfile(context.user.uid);
-        setUserData(updatedUserData);
-    }
+    //     const updatedUserData = await context.getUserProfile(context.user.uid);
+    //     setUserData(updatedUserData);
+    // }
     useEffect(() => {
         
         const fetchData = async () => {
