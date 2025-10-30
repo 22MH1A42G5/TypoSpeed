@@ -28,7 +28,7 @@ export const DataProvider = (props) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(DataAuth, async (currentUser) => {
             setUser(currentUser);
-            setLoading(false);
+            // setLoading(false);
 
             if (currentUser) {
                 setVerified(currentUser.emailVerified);
@@ -65,6 +65,7 @@ export const DataProvider = (props) => {
                     toast.success(`Welcome ${username}! Profile created successfully.`);
                 }
             }
+            setLoading(false);
         });
 
     return () => unsubscribe();
