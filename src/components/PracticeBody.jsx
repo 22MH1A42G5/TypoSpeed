@@ -11,15 +11,16 @@ import { FaXmark } from "react-icons/fa6";
 import { FaClock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FaPlay } from "react-icons/fa";
+import {faker } from '@faker-js/faker'
 import { useDataBase } from '../context';
 import ResultsCard from './ResultsCard';
 
 const PracticeBody = () => {
-  const targetText =
-    "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the alphabet at least once. It has been used for typing practice and font testing for many years. The phrase demonstrates how various letters look when typed together, making it an excellent tool for improving typing skills and accuracy. Many typing enthusiasts use this classic sentence to warm up before more challenging exercises. The quick brown fox jumps over the lazy dog. This pangram contains every letter of the alphabet at least once. It has been used for typing practice and font testing for many years. The phrase demonstrates how various letters look when typed together, making it an excellent tool for improving typing skills and accuracy. Many typing enthusiasts use this classic sentence to warm up before more challenging exercises.";
+  const [targetText ,setTargetText]=
+    useState("The quick brown fox jumps over the lazy dog. This pangram contains every letter of the alphabet at least once. It has been used for typing practice and font testing for many years. The phrase demonstrates how various letters look when typed together, making it an excellent tool for improving typing skills and accuracy. Many typing enthusiasts use this classic sentence to warm up before more challenging exercises. The quick brown fox jumps over the lazy dog. This pangram contains every letter of the alphabet at least once. It has been used for typing practice and font testing for many years. The phrase demonstrates how various letters look when typed together, making it an excellent tool for improving typing skills and accuracy. Many typing enthusiasts use this classic sentence to warm up before more challenging exercises.");
   const containerRef = useRef(null); // you used this for the textarea focus
   const textDisplayRef = useRef(null); // ref for the passage container
-
+  const [pause,setPause] = useState(false);
   const [typedText, setTypedText] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [Accuracy, setAccuracy] = useState(100);
@@ -99,21 +100,28 @@ const PracticeBody = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, typedText]);
 
-  useEffect(() => {
-    if (isActive) {
-      intervalRef.current = setInterval(() => {
-        setTime((prev) => prev - 1);
-      }, 1000);
-    } else {
+
+ useEffect(() => {
+  // Only run timer if test is active, not paused, and time remaining
+  if (isActive && !pause && time > 0) {
+    intervalRef.current = setInterval(() => {
+      setTime(prev => {
+        if (prev <= 1) {
+          clearInterval(intervalRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }
+
+  // Cleanup interval on unmount or when dependencies change
+  return () => {
+    if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-    return () => clearInterval(intervalRef.current);
-  }, [isActive]);
-
-  useEffect(() => {
-    if (!isActive) return;
-    containerRef.current?.focus();
-  }, [isActive]);
+  };
+}, [isActive, pause, time]);
 
   const progress = Math.min((time / timeDuration) * 100, 100);
 
@@ -129,6 +137,21 @@ const PracticeBody = () => {
     if (textDisplayRef.current) textDisplayRef.current.scrollTop = 0;
   };
 
+  useEffect(()=>{
+    if(!isActive)
+    setTargetText(generateLongTextFromSentences());
+  },[isActive]);
+  function generateLongTextFromSentences() {
+  // Request 30 sentences to ensure 300+ words.
+  const numberOfSentences = 30; 
+  
+  // The .sentences() method returns one string with sentences separated by spaces.
+  const longParagraph = faker.lorem.sentences(numberOfSentences);
+  
+  return longParagraph;
+  }
+
+  // console.log(generateLongTextFromSentences());
   // ======= SCROLL ACTIVE CHAR INTO VIEW EFFECT =======
   useEffect(() => {
     // global index of caret (character position)
@@ -236,10 +259,16 @@ const PracticeBody = () => {
             </div>
           ) : (
             <div className="flex gap-4">
-              <div className="flex justify-center items-center gap-3 hover:bg-darkwhite rounded-xl h-10 p-3 border border-gray-400 text-grey cursor-pointer">
+              {pause ?
+              <div onClick={()=>{setPause(false);  }} className="flex justify-center items-center gap-3 hover:bg-darkwhite rounded-xl h-10 p-3 border border-gray-400 text-grey cursor-pointer">
+                <FaPlay />
+                play
+              </div>:
+              <div onClick={()=>{setPause(true);  }} className="flex justify-center items-center gap-3 hover:bg-darkwhite rounded-xl h-10 p-3 border border-gray-400 text-grey cursor-pointer">
                 <FaPause />
                 Pause
               </div>
+              }
               <div
                 onClick={resetTest}
                 className="flex justify-center items-center gap-3 bg-primary rounded-xl h-10 p-3 text-white  hover:bg-blue-700 cursor-pointer"
@@ -305,6 +334,7 @@ const PracticeBody = () => {
         </div>
 
         <textarea
+          spellCheck = {false}
           value={typedText}
           disabled={!isActive}
           ref={containerRef}
