@@ -12,6 +12,8 @@ import { FaClock } from "react-icons/fa";
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaPlay } from "react-icons/fa";
+import { useDataBase } from '../context';
+import ResultsCard from './ResultsCard';
 
 const PracticeBody = () => {
     const targetText = "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the alphabet at least once. It has been used for typing practice and font testing for many years. The phrase demonstrates how various letters look when typed together, making it an excellent tool for improving typing skills and accuracy. Many typing enthusiasts use this classic sentence to warm up before more challenging exercises."
@@ -24,9 +26,13 @@ const PracticeBody = () => {
     const targetArray = targetText.split(" ");
     const [time, setTime] = useState(60);
     const [errors,setErrors] = useState(0);
-    const [timeDuration,setTimeDuration] = useState(60);
+    const [timeDuration,setTimeDuration] = useState(5);
+    const [showResults, setShowResults] = useState(false);
+    const [testStats, setTestStats] = useState(null);
+
     const intervalRef = useRef(null);
     const nav = useNavigate();
+    const context = useDataBase();
     const target = targetArray.map((str,index)=>{ if(index == targetArray.length -1) return str; return (str+" ")})
     
     const formatTime = (seconds) => {
@@ -35,24 +41,57 @@ const PracticeBody = () => {
         return `${mins}:${secs.toString().padStart(2, "0")}`;
     };
 
+
+    const addSessions = async (stats) => {
+        // const stats = {
+        //     wpm: +(Math.random() * 60 + 40).toFixed(0),            // 40–100 WPM
+        //     accuracy: +(Math.random() * 20 + 80).toFixed(2),       // 80–100%
+        //     errors: Math.floor(Math.random() * 10),                // 0–9 errors
+        //     duration: Math.floor(Math.random() * 120) + 30,            // 30–150 sec
+        //     charsTyped: Math.floor(Math.random() * 300) + 100,     // 100–400 chars
+        //     wordsTyped: Math.floor(Math.random() * 80) + 20,        // 20–100 words
+        //     textId : 1
+        // };
+
+        await context.saveTypingSession(context.user.uid , stats);
+        const updatedSessions = await context.getAllSessions(context.user.uid);
+        setSessions(updatedSessions);
+        await new Promise((r) => setTimeout(r, 500));
+
+        const updatedUserData = await context.getUserProfile(context.user.uid);
+        setUserData(updatedUserData);
+    }
     useEffect(() => {
-    if (typedText.length > 0 && typedText.length <= targetText.length) {
-        if (typedText[typedText.length - 1] !== targetText[typedText.length - 1]) {
-        setErrors((prev) => prev + 1);
+        if (typedText.length > 0 && typedText.length <= targetText.length) {
+            if (typedText[typedText.length - 1] !== targetText[typedText.length - 1]) {
+            setErrors((prev) => prev + 1);
+            }
+            const elapsed = Math.max(1, timeDuration - time); 
+            const charsTyped = Math.max(1, typedText.length);
+            const newWPM = (charsTyped * 12) / elapsed;
+            setWPM(Number.isFinite(newWPM) ? newWPM : 0);
+            const accuracy = ((charsTyped - errors) / charsTyped) * 100;
+            setAccuracy(Number.isFinite(accuracy) ? accuracy.toFixed(0) : 100);
         }
-        const elapsed = Math.max(1, timeDuration - time); 
-        const charsTyped = Math.max(1, typedText.length);
-        const newWPM = (charsTyped * 12) / elapsed;
-        setWPM(Number.isFinite(newWPM) ? newWPM : 0);
-        const accuracy = ((charsTyped - errors) / charsTyped) * 100;
-        setAccuracy(Number.isFinite(accuracy) ? accuracy.toFixed(0) : 100);
-    }
-    if (time === 0 && isActive) {
-        resetTest();
-        alert(
-        `Test Completed \nYour WPM: ${WPM.toFixed(0)} \nYour Accuracy: ${Accuracy}% \nYour Errors: ${errors}`
-        );
-    }
+        if (time === 0 && isActive) {
+            resetTest();
+            // alert(
+            // `Test Completed \nYour WPM: ${WPM.toFixed(0)} \nYour Accuracy: ${Accuracy}% \nYour Errors: ${errors}`
+            // );
+            const statistics = {
+                wpm: WPM,            // 40–100 WPM
+                accuracy: Accuracy,       // 80–100%
+                errors: errors,                // 0–9 errors
+                duration: timeDuration,            // 30–150 sec
+                charsTyped: typedText.length,     // 100–400 chars
+                wordsTyped: typedText.split(" ").length,        // 20–100 words
+                textId : 1,
+                sessionDate :new Date(),
+            }
+            setTestStats(statistics);
+            setShowResults(true);
+            addSessions(statistics);
+        }
     }, [time, typedText]);
 
 
@@ -220,6 +259,23 @@ const PracticeBody = () => {
             <button className='w-45 p-1 flex bg-white rounded-xl justify-center text-[16px]  shadow-boxShadow  items-center' > <IoMdSettings className='text-xl m-2' /><p>  New Passage</p></button>
         </div>
         <div className='h-20'></div>
+        {showResults && (
+            <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+                <div className="relative">
+                <ResultsCard 
+                    isClicking = {true}
+                    stats={testStats}
+                    onClose={() => setShowResults(false)} 
+                    onRetry={() => {
+                        setShowResults(false);
+                        resetTest();
+                        setIsActive(true);
+                    }}
+                />
+                </div>
+            </div>
+        )}
+
     </div>
   )
 }
