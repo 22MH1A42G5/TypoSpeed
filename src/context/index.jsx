@@ -18,6 +18,7 @@ const fireStoreDB = getFirestore(app);
 
 
 export const DataProvider = (props) => {
+    const [sessionDetails , setSessionDetails] = useState(null);
     const [user , setUser] = useState(null);
     const [userEmail,setUserEmail] = useState("");
     const [loading, setLoading] = useState(true);
@@ -119,7 +120,7 @@ export const DataProvider = (props) => {
                 charactersTyped: sessionData.charsTyped,
                 wordsTyped: sessionData.wordsTyped,
                 textId: sessionData.textId,
-
+                sessionDate: sessionData.sessionDate,
             });
             console.log("sessionadded");
             // Update user profile after saving session
@@ -252,7 +253,9 @@ export const DataProvider = (props) => {
                 saveTypingSession,
                 getUserProfile,
                 getAllSessions,
-                resendVerificationMail
+                resendVerificationMail,
+                sessionDetails,
+                setSessionDetails,
             }}>
             {props.children}
         </DataContext.Provider>
