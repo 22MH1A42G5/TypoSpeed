@@ -8,6 +8,7 @@ import ProfilePage from './pages/ProfilePage';
 import Practice from './pages/Practice';
 import { AuthRoute, PrivateRoute } from './components/ProtectedRoute';
 import Test from './components/Test'
+import ResultsCard from './components/ResultsCard';
 function App() {
   return (
     <Routes>
@@ -32,6 +33,7 @@ function App() {
           <Practice />
         </PrivateRoute>
       } />
+      <Route path='/results' element={<ResultsCard />} />
     </Routes>
   )
 }

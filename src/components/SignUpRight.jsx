@@ -17,9 +17,10 @@ const SignUpRight = () => {
     const [username , setUsername] = useState('');
     const [mail , setMail] = useState('');
     const [password , setPassword] = useState('');
-    const handleSignup = async (e) => {
+    const handleSignup = async (e, googleAuth) => {
         e?.preventDefault();
         try {
+            console.log(e);
             if(!validateForm(mail , password)){
                 console.log("form Validation Fail");
                 return;
