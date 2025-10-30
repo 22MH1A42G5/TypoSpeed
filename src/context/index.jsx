@@ -1,9 +1,10 @@
 import React from "react";
 import { createContext, useState , useEffect , useContext} from "react";
 import { app } from "../Credentials";
-import {getAuth , GoogleAuthProvider , createUserWithEmailAndPassword , onAuthStateChanged , signOut , signInWithPopup, signInWithEmailAndPassword} from 'firebase/auth'
+import {getAuth , GoogleAuthProvider , createUserWithEmailAndPassword , sendEmailVerification, onAuthStateChanged , signOut , signInWithPopup, signInWithEmailAndPassword} from 'firebase/auth'
 import {set , ref , get , onValue, getDatabase } from 'firebase/database'
 import {doc , getDoc , getFirestore,getDocs, setDoc ,query , orderBy , limit , collection , addDoc , updateDoc} from 'firebase/firestore'
+import toast from "react-hot-toast";
 
 const GoogleProvider = new GoogleAuthProvider();
 
@@ -25,13 +26,50 @@ export const DataProvider = (props) => {
     const stats = { highestWPM:0 , averageAccuracy:0.00 , totalSessions:0 };
   
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(DataAuth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(DataAuth, async (currentUser) => {
             setUser(currentUser);
             setLoading(false);
-            setVerified(currentUser.emailVerified);
+
+            if (currentUser) {
+                setVerified(currentUser.emailVerified);
+
+                const userRef = doc(fireStoreDB, "users", currentUser.uid);
+                const userSnap = await getDoc(userRef);
+
+                if (!userSnap.exists()) {
+                    // Prompt until user gives a valid username
+                    let username = "";
+                    let available = false;
+
+                    while (!available) {
+                        username = prompt("Enter a unique username:");
+
+                        if (!username) {
+                            alert("You must choose a username to continue!");
+                            continue;
+                        }
+
+                        available = await isUsernameAvailable(username);
+                        if (!available) {
+                            alert("Username already taken. Try another one.");
+                        }
+                    }
+
+                    // Create new profile after unique username
+                    await createUserProfileInFirestore(
+                        currentUser.email,
+                        currentUser.uid,
+                        username
+                    );
+
+                    toast.success(`Welcome ${username}! Profile created successfully.`);
+                }
+            }
         });
-        return () => unsubscribe();
+
+    return () => unsubscribe();
     }, []);
+
 
     const signupUserWithEmailAndPassword = (email , password) => {
         return createUserWithEmailAndPassword(DataAuth , email , password);
@@ -41,7 +79,7 @@ export const DataProvider = (props) => {
         const usernameSnap = await getDoc(usernameRef);
         return !usernameSnap.exists(); // true means available
     };
-    const createUserProfileInFirestore = async (mail , uid , username,password) => {
+    const createUserProfileInFirestore = async (mail , uid , username) => {
         const userRef = doc(fireStoreDB , "users" , uid);
         const usernameRef = doc(fireStoreDB ,"usernames" , username);
         const docSnap = await getDoc(userRef);
@@ -64,8 +102,8 @@ export const DataProvider = (props) => {
             });
         }
         await setDoc(usernameRef ,{
-            uid:username,
-            pass:password,
+            name:username,
+            uid:uid,
         })
     };
     const saveTypingSession = async (uid, sessionData) => {
@@ -126,7 +164,6 @@ export const DataProvider = (props) => {
             } else {
                 streak = 1; // first session
             }
-            streak += 1;
             const longestStreak = Math.max(userData.longestStreak, streak);
             const longestStreakDate = userData.longestStreak < longestStreak ? new Date() : userData.longestStreakDate;
 
@@ -173,8 +210,10 @@ export const DataProvider = (props) => {
             return [];
         }
     };
-
-
+    const resendVerificationMail = async () => {
+        await sendEmailVerification(user);
+        toast.success("Verification link send to your mail")
+    }
     const putData = (key , data) => {
         set(ref(database , key) , data);
     }
@@ -183,9 +222,14 @@ export const DataProvider = (props) => {
         signOut(DataAuth);
     }
 
-    const signUpWithGoogle = ()=>{
-        signInWithPopup(DataAuth,GoogleProvider);
-    }
+    const signUpWithGoogle = async () => {
+        try {
+            await signInWithPopup(DataAuth, GoogleProvider);
+        } catch (err) {
+            console.error("Google signup error:", err);
+        }
+    };
+
 
     const loginUserWithEmailAndPassword = async (email,password)=>{
         return signInWithEmailAndPassword(DataAuth,email,password);
@@ -207,7 +251,8 @@ export const DataProvider = (props) => {
                 verified,
                 saveTypingSession,
                 getUserProfile,
-                getAllSessions
+                getAllSessions,
+                resendVerificationMail
             }}>
             {props.children}
         </DataContext.Provider>

@@ -6,9 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import { useDataBase } from '../context';
 import profileImg from '../assets/profileImg.jpeg'
 
+
 const NavBar = () => {
   const context = useDataBase();
   const nav = useNavigate();
+  const resendVerificationMail = () => {
+    context.resendVerificationMail();
+  }
   // const user = context.user;
   return (
 
@@ -38,12 +42,18 @@ const NavBar = () => {
       :
       ( !(context.verified) ) ?
       <div className='flex gap-3 justify-center items-center'>
-        <button onClick={() => context.Logout()} className='border-red-500 border-2 w-20 h-11 rounded-md transition duration-200 cursor-pointer hover:bg-red-500 hover:text-white text-red-500' >Logout</button>
-        <a  target='_blank' className='border-green-500 flex justify-center items-center border-2 w-50 h-11 rounded-md transition duration-200 cursor-pointer hover:bg-green-500 hover:text-white text-green-500' >Resend Verification mail</a>
+        <button onClick={() => {context.Logout(); nav('/login')}} className='border-red-500 border-2 w-20 h-11 rounded-md transition 
+        duration-200 cursor-pointer hover:bg-red-500 hover:text-white text-red-500' >
+          Logout
+        </button>
+        <a target='_blank' onClick={e => resendVerificationMail()} className='border-green-500 flex justify-center items-center border-2 w-50 h-11 rounded-md 
+        transition duration-200 cursor-pointer hover:bg-green-500 hover:text-white text-green-500' >
+          Resend Verification mail
+        </a>
       </div>
       :
       <div className='flex gap-3 justify-center items-center'>
-        <button onClick={() => context.Logout()} className='border-red-500 border-2 w-20 h-11 rounded-md transition duration-200 cursor-pointer hover:bg-red-500 hover:text-white text-red-500' >Logout</button>
+        <button onClick={() => {context.Logout(); nav('/login');}} className='border-red-500 border-2 w-20 h-11 rounded-md transition duration-200 cursor-pointer hover:bg-red-500 hover:text-white text-red-500' >Logout</button>
         <img src={profileImg} onClick={()=>{nav('/profile')}} alt="Not Loaded" className='rounded-full h-10 cursor-pointer w-10'/>
       </div>
       }
