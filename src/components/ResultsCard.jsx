@@ -48,10 +48,10 @@ const ResultsCard = (props) => {
         </div>
         { props.isClicking && (
           <button 
-            onClick={props.onRetry}
+            onClick={()=>{props.onRetry()}}
             className='flex items-center gap-2 bg-blue-500 px-8 py-3 rounded-2xl text-white cursor-pointer' >
             <FaArrowRotateRight className='text-[18px]' />
-            <p>Try Again</p>
+            <p>Try Again </p>
           </button>
         )}
         <button 
