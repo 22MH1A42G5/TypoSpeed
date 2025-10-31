@@ -28,7 +28,7 @@ const PracticeBody = () => {
   const targetArray = targetText.split(" ");
   const [time, setTime] = useState(60);
   const [errors, setErrors] = useState(0);
-  const [timeDuration, setTimeDuration] = useState(60);
+  const [timeDuration, setTimeDuration] = useState(5);
   const [showResults, setShowResults] = useState(false);
   const [testStats, setTestStats] = useState(null);
   const intervalRef = useRef(null);
