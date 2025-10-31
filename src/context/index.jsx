@@ -38,33 +38,42 @@ export const DataProvider = (props) => {
                 const userSnap = await getDoc(userRef);
 
                 if (!userSnap.exists()) {
-                    // Prompt until user gives a valid username
-                    let username = "";
-                    let available = false;
-
-                    while (!available) {
-                        username = prompt("Enter a unique username:");
-
-                        if (!username) {
-                            alert("You must choose a username to continue!");
-                            continue;
-                        }
-
-                        available = await isUsernameAvailable(username);
-                        if (!available) {
-                            alert("Username already taken. Try another one.");
-                        }
-                    }
-
-                    // Create new profile after unique username
-                    await createUserProfileInFirestore(
-                        currentUser.email,
-                        currentUser.uid,
-                        username
+                    // Show username prompt ONLY if user signed in with Google
+                    const isGoogleUser = currentUser.providerData.some(
+                        (p) => p.providerId === "google.com"
                     );
 
-                    toast.success(`Welcome ${username}! Profile created successfully.`);
+                    if (isGoogleUser) {
+                        let username = "";
+                        let available = false;
+
+                        while (!available) {
+                            username = prompt("Enter a unique username:");
+
+                            if (!username) {
+                                alert("You must choose a username to continue!");
+                                continue;
+                            }
+
+                            available = await isUsernameAvailable(username);
+                            if (!available) {
+                                alert("Username already taken. Try another one.");
+                            }
+                        }
+
+                        await createUserProfileInFirestore(
+                            currentUser.email,
+                            currentUser.uid,
+                            username
+                        );
+
+                        toast.success(`Welcome ${username}! Profile created successfully.`);
+                    } else {
+                        // Email/password users already set username during signup — just skip.
+                        console.log("Skipping username prompt for email signup.");
+                    }
                 }
+
             }
             setLoading(false);
         });

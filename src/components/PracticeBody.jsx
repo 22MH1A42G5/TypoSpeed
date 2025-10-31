@@ -33,6 +33,7 @@ const PracticeBody = () => {
   const [testStats, setTestStats] = useState(null);
   const intervalRef = useRef(null);
   const nav = useNavigate();
+  const context = useDataBase();
   const target = targetArray.map((str, index) => {
     if (index == targetArray.length - 1) return str;
     return str + " ";
@@ -74,11 +75,14 @@ const PracticeBody = () => {
 
       const elapsed = Math.max(1, timeDuration - time);
       const charsTyped = Math.max(1, typedText.length);
-      const newWPM = (charsTyped * 12) / elapsed;
+      const rawWPM = (charsTyped * 12) / elapsed;
+      const newWPM = Math.round(rawWPM)
       setWPM(Number.isFinite(newWPM) ? newWPM : 0);
 
-      const accuracy = ((charsTyped - newErrors) / charsTyped) * 100;
-      setAccuracy(Number.isFinite(accuracy) ? accuracy.toFixed(0) : 100);
+      // const accuracy = ((charsTyped - newErrors) / charsTyped) * 100;
+      const accuracyVal = Math.max(0, ((charsTyped - newErrors) / charsTyped) * 100);
+      const accuracy = Math.round(accuracyVal);
+      setAccuracy(accuracy);
     }
 
     if (time === 0 && isActive) {
@@ -250,11 +254,13 @@ const PracticeBody = () => {
           </div>
           {!isActive ? (
             <div
-              onClick={() => {
-                setIsActive((prev) => !prev);
-              }}
-              className="flex bg-secondary text-white rounded-xl justify-center items-center text-[18px] font-bold max-w-[190px]  px-5 py-2 cursor-pointer hover:bg-amber-400 transition ease-in-out duration-200"
-            >
+  onClick={() => {
+    setIsActive(true);
+    setPause(false);
+    setTimeout(() => containerRef.current?.focus(), 50); // slight delay ensures render done
+  }}
+  className="flex bg-secondary text-white rounded-xl justify-center items-center text-[18px] font-bold max-w-[190px] px-5 py-2 cursor-pointer hover:bg-amber-400 transition ease-in-out duration-200"
+>
               <FaPlay className="mr-2 text-[15px]" /> Start Free Test
             </div>
           ) : (
