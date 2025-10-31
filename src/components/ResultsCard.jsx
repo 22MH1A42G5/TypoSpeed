@@ -42,7 +42,7 @@ const ResultsCard = (props) => {
             <p className='text-xl text-gray-600'>Errors</p>
           </div>
           <div className='flex flex-col items-center' >
-            <p className='text-4xl font-bold text-purple-500'>{props.stats.duration} mins</p>
+            <p className='text-4xl font-bold text-purple-500'>{props.stats.duration} secs</p>
             <p className='text-xl text-gray-600'>Time</p>
           </div>
         </div>
