@@ -127,6 +127,7 @@ const PracticeBody = () => {
   };
 }, [isActive, pause, time]);
 
+
   const progress = Math.min((time / timeDuration) * 100, 100);
 
   const resetTest = () => {
@@ -144,6 +145,9 @@ const PracticeBody = () => {
   useEffect(()=>{
     if(!isActive)
     setTargetText(generateLongTextFromSentences());
+    if(isActive === true){
+       containerRef.current?.focus();
+    }
   },[isActive]);
   function generateLongTextFromSentences() {
   // Request 30 sentences to ensure 300+ words.
@@ -266,11 +270,11 @@ const PracticeBody = () => {
           ) : (
             <div className="flex gap-4">
               {pause ?
-              <div onClick={()=>{setPause(false);  }} className="flex justify-center items-center gap-3 hover:bg-darkwhite rounded-xl h-10 p-3 border border-gray-400 text-grey cursor-pointer">
+              <div onClick={()=>{setPause(false);  containerRef.current?.focus(); }} className="flex justify-center items-center gap-3 hover:bg-darkwhite rounded-xl h-10 p-3 border border-gray-400 text-grey cursor-pointer">
                 <FaPlay />
                 play
               </div>:
-              <div onClick={()=>{setPause(true);  }} className="flex justify-center items-center gap-3 hover:bg-darkwhite rounded-xl h-10 p-3 border border-gray-400 text-grey cursor-pointer">
+              <div onClick={()=>{setPause(true); }} className="flex justify-center items-center gap-3 hover:bg-darkwhite rounded-xl h-10 p-3 border border-gray-400 text-grey cursor-pointer">
                 <FaPause />
                 Pause
               </div>
@@ -377,6 +381,7 @@ const PracticeBody = () => {
             <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
                 <div className="relative">
                 <ResultsCard 
+                    containerRef = {containerRef}
                     isClicking = {true}
                     stats={testStats}
                     onClose={() => setShowResults(false)} 
