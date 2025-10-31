@@ -15,6 +15,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 const HomeBody = () => {
     const targetText = "The quick brown fox jumps over the layz dog. This pangram sentence contains every letter of the alphabet at least once.";
     const containerRef = useRef(null);
+    const targetRef = useRef(null);
     const [typedText,setTypedText] = useState("");
     const [isActive,setIsActive] = useState(false);
     const [Accuracy,setAccuracy] = useState(100);
@@ -36,6 +37,12 @@ const HomeBody = () => {
         return `${mins}:${secs.toString().padStart(2, "0")}`;
     };
 
+
+    const scrollToTargetDiv = () => {
+        if (targetRef.current) {
+        targetRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
     // const handleKeyDown = (e) => {
     //     if (e.ctrlKey || e.metaKey || e.altKey) return;
     //   if (e.key.length === 1) {
@@ -116,8 +123,8 @@ const HomeBody = () => {
         <h1 className=' text-5xl/15 font-bold mb-4'>Master Your Typing Speed with <span className='text-secondary'>Real-Time</span> Analytics </h1>
         <p className='text-[22px] mb-6'>Track your WPM, accuracy, and progress with our advanced typing test platform. Compete with friends and climb the global leaderboard.</p>
         <div className='flex flex-wrap gap-3'>
-            <div className='flex bg-secondary  h-15 w-58 rounded-xl justify-center items-center text-[21px] font-bold hover:bg-amber-400 transition ease-in-out duration-200 cursor-pointer'> <FaPlay className='mr-2 text-[15px]' /> Start Typing Test</div>
-            <div className='flex border-2 border-white  h-15 w-45 rounded-xl justify-center items-center text-[21px] font-bold hover:bg-white hover:text-primary transition ease-in-out duration-200 cursor-pointer'> <GoGraph className='mr-2' /> View Demo</div>
+            <div onClick={()=>{nav('practice')}} className='flex bg-secondary  h-15 w-58 rounded-xl justify-center items-center text-[21px] font-bold hover:bg-amber-400 transition ease-in-out duration-200 cursor-pointer'> <FaPlay className='mr-2 text-[15px]' /> Start Typing Test</div>
+            <div onClick={scrollToTargetDiv} className='flex border-2 border-white  h-15 w-45 rounded-xl justify-center items-center text-[21px] font-bold hover:bg-white hover:text-primary transition ease-in-out duration-200 cursor-pointer'> <GoGraph className='mr-2' /> View Demo</div>
         </div>
       </div>
       <div className=' maxw-xl  bg-[#416ed5] border-[0.1px] border-[#688edf] p-5 rounded-xl flex flex-col gap-5'>
@@ -176,7 +183,7 @@ const HomeBody = () => {
 
     {/* ------------Try Section --------------- */}
 
-    <div className='p-20 bg-lightgrey '>
+    <div ref={targetRef} className='p-20 bg-lightgrey '>
         <div className='flex justify-center flex-col  items-center gap-20'>
             <div className='flex items-center flex-col gap-4 '>
             <h1 className='text-3xl font-bold '>Try TypoSpeed Now</h1>
