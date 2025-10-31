@@ -127,11 +127,6 @@ const PracticeBody = () => {
   };
 }, [isActive, pause, time]);
 
-  useEffect(()=>{
-    if(isActive === true){
-       containerRef.current?.focus();
-    }
-  },[isActive])
 
   const progress = Math.min((time / timeDuration) * 100, 100);
 
@@ -150,6 +145,9 @@ const PracticeBody = () => {
   useEffect(()=>{
     if(!isActive)
     setTargetText(generateLongTextFromSentences());
+    if(isActive === true){
+       containerRef.current?.focus();
+    }
   },[isActive]);
   function generateLongTextFromSentences() {
   // Request 30 sentences to ensure 300+ words.
