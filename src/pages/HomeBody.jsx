@@ -294,7 +294,7 @@ const HomeBody = () => {
         <p className='max-w-3xl text-center text-grey text-xl'>Join thousands of users who have already improved their typing skills with TypoSpeed. Start your journey today!</p>
         <div className='flex gap-4'>
             <div onClick={()=>{ nav('/signup')}} className='flex p-3  bg-primary text-white text-xl font-bold rounded-xl justify-center items-center hover:bg-blue-800 cursor-pointer'> <HiUserAdd  className='m-2'/>  Create Free Account</div>
-            <div onClick={()=>{ nav('/login')}} className='flex p-3  bg-white border-2 border-primary text-primary text-xl font-bold rounded-xl justify-center items-center hover:bg-primary hover:text-white cursor-pointer' > <FaPlay className='mr-2 text-[15px] t '/> Try Without Signup</div>
+            <div onClick={scrollToTargetDiv} className='flex p-3  bg-white border-2 border-primary text-primary text-xl font-bold rounded-xl justify-center items-center hover:bg-primary hover:text-white cursor-pointer' > <FaPlay className='mr-2 text-[15px] t '/> Try Without Signup</div>
         </div>
 
     </div>
