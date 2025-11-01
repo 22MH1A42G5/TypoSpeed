@@ -14,7 +14,7 @@ dist-ssr
 resources
 
 # Editor directories and files
-Credentials.jsx
+.env
 .vscode/*
 !.vscode/extensions.json
 .idea
