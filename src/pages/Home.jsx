@@ -9,7 +9,7 @@ const Home = () => {
     (context.user && context.verified === false)? toast.success("Verify Your mail"):""
   return (
     <div>
-      {console.log(context.user)}
+      {/* {console.log(context.user)} */}
         <NavBar />
         <HomeBody/>
         <ContactUs/>
