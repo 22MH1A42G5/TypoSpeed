@@ -21,6 +21,7 @@ const PracticeBody = () => {
   const containerRef = useRef(null); // you used this for the textarea focus
   const textDisplayRef = useRef(null); // ref for the passage container
   const [pause,setPause] = useState(false);
+  const [mx,setMx] = useState(1);
   const [typedText, setTypedText] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [Accuracy, setAccuracy] = useState(100);
@@ -63,16 +64,23 @@ const PracticeBody = () => {
     const updatedUserData = await context.getUserProfile(context.user.uid);
     setUserData(updatedUserData);
 }
+
+  useEffect(()=>{
+    // console.log(typedText)
+    // console.log(errors)
+    setMx(Math.max(mx,typedText.length));
+      if(typedText.length > 0 ){
+        if(targetText[typedText.length-1] != typedText[typedText.length-1] && typedText.length >= mx){
+          // console.log("Hello")
+          setErrors((prev) => prev+1);
+        }
+      }
+  },[typedText])
   // Update WPM/accuracy/errors — simplified slightly to avoid double counting errors on every render.
   useEffect(() => {
     if (typedText.length > 0 && typedText.length <= targetText.length) {
       // count errors fresh (recalculate instead of incrementing to avoid overcounting)
-      let newErrors = 0;
-      for (let i = 0; i < typedText.length; i++) {
-        if (typedText[i] !== targetText[i]) newErrors++;
-      }
-      setErrors(newErrors);
-
+      // let newErrors = 0;
       const elapsed = Math.max(1, timeDuration - time);
       const charsTyped = Math.max(1, typedText.length);
       const rawWPM = (charsTyped * 12) / elapsed;
@@ -80,7 +88,7 @@ const PracticeBody = () => {
       setWPM(Number.isFinite(newWPM) ? newWPM : 0);
 
       // const accuracy = ((charsTyped - newErrors) / charsTyped) * 100;
-      const accuracyVal = Math.max(0, ((charsTyped - newErrors) / charsTyped) * 100);
+      const accuracyVal = Math.max(0, ((charsTyped - errors) / charsTyped) * 100);
       const accuracy = Math.round(accuracyVal);
       setAccuracy(accuracy);
     }
