@@ -11,6 +11,7 @@ import { HiMiniUserCircle } from "react-icons/hi2";
 import { IoColorPalette } from "react-icons/io5";
 import { useRef } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import ResultsCard from '../components/ResultsCard';
 
 const HomeBody = () => {
     const targetText = "The quick brown fox jumps over the layz dog. This pangram sentence contains every letter of the alphabet at least once.";
@@ -24,6 +25,8 @@ const HomeBody = () => {
     const [time, setTime] = useState(0);
     const [errors,setErrors] = useState(0);
     const intervalRef = useRef(null);
+    const [showResults, setShowResults] = useState(false);
+    const [stats, setStats] = useState(null);
     const nav = useNavigate();
     const target = targetArray.map((str,index)=>{ if(index == targetArray.length -1) return str; return (str+" ")})
     // useEffect(() => {
@@ -79,9 +82,22 @@ const HomeBody = () => {
         if(time !== 0)
         setWPM((typedText.length*12)/time);
         setAccuracy((((targetText.length - errors)/targetText.length) * 100).toFixed(0))
-        if(typedText.length === targetText.length){
-            resetTest();
-            alert(`Test Completed \nYour WPM : ${WPM.toFixed(0)} \n Your Accuracy : ${Accuracy} \n Your Errors : ${errors}`);
+        // if(typedText.length === targetText.length){
+        //     resetTest();
+        //     alert(`Test Completed \nYour WPM : ${WPM.toFixed(0)} \n Your Accuracy : ${Accuracy} \n Your Errors : ${errors}`);
+        // }
+        if (typedText.length === targetText.length) {
+            clearInterval(intervalRef.current);
+            setIsActive(false);
+
+            setStats({
+                wpm: WPM.toFixed(0),
+                accuracy: Accuracy,
+                errors,
+                duration: time,
+                sessionDate: new Date()
+            });
+            setShowResults(true);
         }
     },[typedText])
 
@@ -280,8 +296,21 @@ const HomeBody = () => {
             <div onClick={()=>{ nav('/signup')}} className='flex p-3  bg-primary text-white text-xl font-bold rounded-xl justify-center items-center hover:bg-blue-800 cursor-pointer'> <HiUserAdd  className='m-2'/>  Create Free Account</div>
             <div onClick={()=>{ nav('/login')}} className='flex p-3  bg-white border-2 border-primary text-primary text-xl font-bold rounded-xl justify-center items-center hover:bg-primary hover:text-white cursor-pointer' > <FaPlay className='mr-2 text-[15px] t '/> Try Without Signup</div>
         </div>
-    </div>
 
+    </div>
+        {showResults && (
+        <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex justify-center items-center z-50">
+            <ResultsCard
+            stats={stats}
+            isClicking={true}
+            onRetry={() => {
+                resetTest();
+                setShowResults(false);
+            }}
+            onClose={() => {setShowResults(false); resetTest();}}
+            />
+        </div>
+        )}
     </>
   )
 }

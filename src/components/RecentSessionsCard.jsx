@@ -48,6 +48,8 @@ const RecentSessionsCard = (props) => {
             <p className='text-2xl font-bold mb-2'>
                 Recent Sessions
             </p>
+            <ul className='bg-white shadow-boxShadow p-5 rounded-2xl flex flex-col 
+        items-start justify-start w-full min-w-[350px] mb-2 overflow-y-auto h-[300px]'>
                 {props.sessions.map(s => (
                 // <li key={s.id}>
                 //     {s.wpm} WPM - {s.accuracy}% ({new Date(s.timestamp).toLocaleString()})
@@ -60,8 +62,10 @@ const RecentSessionsCard = (props) => {
                         </div>
                         <p className='text-[12px]'>{getTimeAgo(s.timestamp)}</p>
                     </li>
+                    
                 
                 ))}
+                </ul>
                 {isOpen && selectedSession && (
                     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
                         <ResultsCard
