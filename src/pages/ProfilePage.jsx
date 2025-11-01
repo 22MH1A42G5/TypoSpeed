@@ -10,6 +10,8 @@ import { FaFire } from "react-icons/fa6";
 import { FaTrophy } from "react-icons/fa6";
 import { useDataBase } from '../context';
 import { GridLoader } from 'react-spinners';
+import profileImg from '../assets/profileImg.png'
+
 const ProfilePage = () => {
     const context = useDataBase();
     const [userData , setUserData] = useState(null);
@@ -70,8 +72,8 @@ const ProfilePage = () => {
             <div className='flex justify-center content-center w-full p-4'>
                 <div className='mt-5 p-2 md:p-5 bg-white shadow-boxShadow w-full max-w-5xl rounded-2xl flex flex-col md:flex-row items-start md:items-center md:justify-between'>
                     <div className='flex gap-4  p-5 items-center'>
-                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" 
-                        className='w-24 h-24 border-4 border-blue-400 rounded-full ' alt="" />
+                        <img src={profileImg} 
+                        className='w-15 h-15 border-4 border-blue-400 rounded-full ' alt="" />
                         <div className='flex flex-col'>
                             <h1 className='font-bold text-3xl'>{userData.displayName}</h1>
                             {/* <p className='text-[17px]'>alex_jhonson</p> */}

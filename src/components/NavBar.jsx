@@ -4,7 +4,7 @@ import { href, Link, redirect } from 'react-router-dom';
 import { FaMoon } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useDataBase } from '../context';
-import profileImg from '../assets/profileImg.jpeg'
+import profileImg from '../assets/profileImg.png'
 
 
 const NavBar = () => {
