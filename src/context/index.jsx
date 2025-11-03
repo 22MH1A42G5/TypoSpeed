@@ -165,7 +165,7 @@ export const DataProvider = (props) => {
             const diffInDays = Math.floor((today - lastSessionDate) / (1000 * 60 * 60 * 24));
             if (diffInDays === 1) {
                 // Continued streak
-                streak = 1;
+                streak = streak + 1;
             } else if (diffInDays === 0) {
                 // same day → no change
             } else {

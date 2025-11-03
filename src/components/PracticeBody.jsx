@@ -11,9 +11,9 @@ import { FaXmark } from "react-icons/fa6";
 import { FaClock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FaPlay } from "react-icons/fa";
-import {faker } from '@faker-js/faker'
 import { useDataBase } from '../context';
 import ResultsCard from './ResultsCard';
+import { paragraphs } from "../data/pagraphs";
 
 const PracticeBody = () => {
   const [targetText ,setTargetText]=
@@ -35,6 +35,7 @@ const PracticeBody = () => {
   const intervalRef = useRef(null);
   const nav = useNavigate();
   const context = useDataBase();
+  const [lastIndex, setLastIndex] = useState(-1);
   const target = targetArray.map((str, index) => {
     if (index == targetArray.length - 1) return str;
     return str + " ";
@@ -158,13 +159,14 @@ const PracticeBody = () => {
     }
   },[isActive]);
   function generateLongTextFromSentences() {
-  // Request 30 sentences to ensure 300+ words.
-  const numberOfSentences = 30; 
-  
-  // The .sentences() method returns one string with sentences separated by spaces.
-  const longParagraph = faker.lorem.sentences(numberOfSentences);
-  
-  return longParagraph;
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * paragraphs.length);
+    } while (randomIndex === lastIndex && paragraphs.length > 1);
+
+    setLastIndex(randomIndex);
+    return paragraphs[randomIndex];
+
   }
 
   // console.log(generateLongTextFromSentences());
